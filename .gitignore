@@ -1,7 +1,8 @@
 /__pycache__
-/pictures/*.jpg
+/pictures/*
 /backup
 .vscode
 *.jpg
 *.png
 *.HEIC
+heic2jpg.py

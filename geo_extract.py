@@ -11,37 +11,42 @@ def get_file_list(path):
         os.path.isfile(os.path.join(path, f)) and f != '.DS_Store')]
     return files_list
 
-def jpg_img_list(img_list):
+def get_jpg_file_list(img_list):
     """Return a list of accepted jpg files from the pictures list"""
     jpg_ext = ['.jpg', '.jpeg']
     jpg_list = [img for img in img_list if (
         os.path.splitext(img)[-1].lower() in jpg_ext)]
     return jpg_list
 
+def img_metadata_to_dict():
+    """
+    Extracts the metadata of the images in the pictures folders and
+    convert it into an useful, readable dictionary.
+    """
+    path_name = os.path.join(os.getcwd(), 'pictures')
+    jpg_img_list = get_jpg_file_list(get_file_list(path_name))
+    jpg_img_data_list = []
+    geolocator = Nominatim(user_agent="geo_pic_finder")
+    reverse = partial(geolocator.reverse, language="en")
 
-path_name = os.path.join(os.getcwd(), 'pictures')
-jpg_img_list = jpg_img_list(get_file_list(path_name))
-jpg_img_data_list = []
-geolocator = Nominatim(user_agent="geo_pic_finder")
-reverse = partial(geolocator.reverse, language="en")
+    for img in jpg_img_list:
+        img_path = os.path.join(path_name, img)
 
-for img in jpg_img_list:
-    # name, ext = os.path.splitext(img)
-    img_path = os.path.join(path_name, img)
+        try:
+            meta_data = ImageMetaData(img_path)
+            lat, lon = meta_data.get_lat_lon()
+            location = reverse([lat, lon])
+            country = location.raw['address']['country']
+            jpg_img_data_list.append({'filename': img,
+                                'filepath': img_path,
+                                'metadata': meta_data,
+                                'latitude': lat,
+                                'longitude': lon,
+                                'country': country})
+        except:
+            pass
 
-    try:
-        meta_data = ImageMetaData(img_path)
-        lat, lon = meta_data.get_lat_lon()
-        location = reverse([lat, lon])
-        country = location.raw['address']['country']
-        jpg_img_data_list.append({'filename': img,
-                            'file_path': img_path,
-                            'metadata': meta_data,
-                            'latitude': lat,
-                            'longitude': lon,
-                            'country': country})
-    except:
-        pass
+    return jpg_img_data_list
 
 def create_folders_for_pictures(img_list):
     """
@@ -55,9 +60,12 @@ def create_folders_for_pictures(img_list):
         if not os.path.exists(img_path):
             os.makedirs(img_path)
 
-        source = os.path.join(path_name, img['filename'])
         dest = os.path.join(img_path, img['filename'])
-        shutil.move(source, dest)
+        shutil.move(img['filepath'], dest)
 
-create_folders_for_pictures(jpg_img_data_list)
-print(jpg_img_data_list)
+def main():
+    img_list = img_metadata_to_dict()
+    create_folders_for_pictures(img_list)
+
+if __name__ == '__main__':
+    main()
