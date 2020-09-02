@@ -1,7 +1,7 @@
 /__pycache__
-/pictures
+/pictures/*.jpg
 /backup
 .vscode
-.jpg
-.jpeg
-.png
+*.jpg
+*.png
+*.HEIC

@@ -4,7 +4,11 @@ from PIL.ExifTags import TAGS, GPSTAGS
 
 
 class ImageMetaData(object):
-
+    """
+    Get the Metadata of any picture file.
+    Optional methods for extracting GPSInfo and converting the
+    coordinates into degrees.type
+    """
     exif_data = None
     image = None
 
@@ -58,7 +62,6 @@ class ImageMetaData(object):
 
     def get_lat_lon(self):
         """Returns the latitude and longitude if available in the exif data"""
-
         lat = None
         lon = None
         exif_data = self.get_exif_data()
