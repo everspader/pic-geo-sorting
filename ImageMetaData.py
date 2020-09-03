@@ -1,4 +1,3 @@
-import os
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
@@ -73,7 +72,8 @@ class ImageMetaData(object):
             gps_longitude = self.get_if_exist(gps_info, 'GPSLongitude')
             gps_longitude_ref = self.get_if_exist(gps_info, 'GPSLongitudeRef')
 
-            if gps_latitude and gps_latitude_ref and gps_longitude and gps_longitude_ref:
+            if (gps_latitude and gps_latitude_ref and
+               gps_longitude and gps_longitude_ref):
                 lat = self.gps_to_degrees(gps_latitude)
                 if gps_latitude_ref != 'N':
                     lat = -lat

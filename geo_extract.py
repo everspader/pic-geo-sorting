@@ -1,7 +1,9 @@
 import os
 import shutil
+
 from functools import partial
 from geopy.geocoders import Nominatim
+
 from ImageMetaData import ImageMetaData
 
 
@@ -11,12 +13,14 @@ def get_file_list(path):
         os.path.isfile(os.path.join(path, f)) and f != '.DS_Store')]
     return files_list
 
+
 def get_jpg_file_list(img_list):
     """Return a list of accepted jpg files from the pictures list"""
     jpg_ext = ['.jpg', '.jpeg']
     jpg_list = [img for img in img_list if (
         os.path.splitext(img)[-1].lower() in jpg_ext)]
     return jpg_list
+
 
 def img_metadata_to_dict():
     """
@@ -38,15 +42,16 @@ def img_metadata_to_dict():
             location = reverse([lat, lon])
             country = location.raw['address']['country']
             jpg_img_data_list.append({'filename': img,
-                                'filepath': img_path,
-                                'metadata': meta_data,
-                                'latitude': lat,
-                                'longitude': lon,
-                                'country': country})
-        except:
+                                      'filepath': img_path,
+                                      'metadata': meta_data,
+                                      'latitude': lat,
+                                      'longitude': lon,
+                                      'country': country})
+        except Exception:
             pass
 
     return jpg_img_data_list
+
 
 def create_folders_for_pictures(img_list):
     """
@@ -63,9 +68,11 @@ def create_folders_for_pictures(img_list):
         dest = os.path.join(img_path, img['filename'])
         shutil.move(img['filepath'], dest)
 
+
 def main():
     img_list = img_metadata_to_dict()
     create_folders_for_pictures(img_list)
+
 
 if __name__ == '__main__':
     main()
