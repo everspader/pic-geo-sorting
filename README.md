@@ -8,3 +8,7 @@ This GPS information is then used to extract the location of interest (address, 
 
 [pyheif](https://pypi.org/project/pyheif/)\
 [geopy](https://geopy.readthedocs.io/en/stable/)
+
+### References
+
+[gitmp01/heic2jpeg](https://github.com/gitmp01/heic2jpeg/blob/master/heic-to-jpeg.py)
